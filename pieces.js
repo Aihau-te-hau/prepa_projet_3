@@ -36,3 +36,43 @@ for (let i = 0; i < pieces.length; i++) {
 
  }
  
+ // trie sur le prix
+ const boutonTrier = document.querySelector(".btn-trier");
+ boutonTrier.addEventListener("click", function() {
+    const piecesOrdonnees = Array.from(pieces);
+
+    pieces.sort(function(a,b) {
+        return a.prix - b.prix;
+    })
+
+    console.log(piecesOrdonnees);
+ })
+
+ // filtre sur le prix
+ const boutonFiltrer = document.querySelector(".btn-filtrer");
+ boutonFiltrer.addEventListener("click", function() {
+    const piecesFiltrees = pieces.filter(function(pieces) {
+        return pieces.prix <= 35;
+    });
+ })
+
+// trie décroissant sur le prix
+const boutonDecroissant = document.querySelector(".btn-decroissant");
+
+boutonDecroissant.addEventListener("click", function () {
+    const piecesOrdonnees = Array.from(pieces);
+    piecesOrdonnees.sort(function (a, b) {
+        return b.prix - a.prix;
+     });
+     console.log(piecesOrdonnees);
+});
+
+// filtre sur la desciption existante
+const boutonNoDescription = document.querySelector(".btn-nodesc");
+
+boutonNoDescription.addEventListener("click", function () {
+    const piecesFiltrees = pieces.filter(function (piece) {
+        return piece.description;
+    });
+   console.log(piecesFiltrees)
+});
