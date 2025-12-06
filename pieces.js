@@ -1,12 +1,20 @@
-import { ajoutListenersAvis, ajoutListenerEnvoyerAvis } from "./avis.js";
+import { ajoutListenersAvis, ajoutListenerEnvoyerAvis, afficherAvis } from "./avis.js";
+//Récupération des pièces eventuellement stockées dans le localStorage
+let pieces = window.localStorage.getItem('pieces');
 
-// Récupération des pièces depuis le fichier JSON
-const reponse = await fetch('http://localhost:8081/pieces/');
-const pieces = await reponse.json();
-
-// on appelle la fonction pour ajouter le listener au formulaire
+if (pieces === null){
+    // Récupération des pièces depuis l'API
+    const reponse = await fetch('http://localhost:8081/pieces/');
+    pieces = await reponse.json();
+    // Transformation des pièces en JSON
+    const valeurPieces = JSON.stringify(pieces);
+    // Stockage des informations dans le localStorage
+    window.localStorage.setItem("pieces", valeurPieces);
+}else{
+    pieces = JSON.parse(pieces);
+}
+// on appel la fonction pour ajouter le listener au formulaire
 ajoutListenerEnvoyerAvis()
-
 
 function genererPieces(pieces){
     for (let i = 0; i < pieces.length; i++) {
@@ -16,6 +24,7 @@ function genererPieces(pieces){
         const sectionFiches = document.querySelector(".fiches");
         // Création d’une balise dédiée à une pièce automobile
         const pieceElement = document.createElement("article");
+        pieceElement.dataset.id = pieces[i].id
         // Création des balises 
         const imageElement = document.createElement("img");
         imageElement.src = article.image;
@@ -51,7 +60,18 @@ function genererPieces(pieces){
 
 genererPieces(pieces);
 
- //gestion des bouttons 
+for(let i = 0; i < pieces.length; i++){
+    const id = pieces[i].id;
+    const avisJSON = window.localStorage.getItem(`avis-piece-${id}`);
+    const avis = JSON.parse(avisJSON);
+
+    if(avis !== null){
+        const pieceElement = document.querySelector(`article[data-id="${id}"]`);
+        afficherAvis(pieceElement, avis)
+    }
+}
+
+ //gestion des boutons 
 const boutonTrier = document.querySelector(".btn-trier");
 
 boutonTrier.addEventListener("click", function () {
@@ -119,7 +139,6 @@ document.querySelector('.abordables')
     .appendChild(pElement)
     .appendChild(abordablesElements);
 
-//Code Exercice 
 const nomsDisponibles = pieces.map(piece => piece.nom)
 const prixDisponibles = pieces.map(piece => piece.prix)
 
@@ -150,3 +169,9 @@ inputPrixMax.addEventListener('input', function(){
     document.querySelector(".fiches").innerHTML = "";
     genererPieces(piecesFiltrees);  
 })
+
+// Ajout du listener pour mettre à jour des données du localStorage
+const boutonMettreAJour = document.querySelector(".btn-maj");
+boutonMettreAJour.addEventListener("click", function () {
+   window.localStorage.removeItem("pieces");
+});
