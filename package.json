@@ -26,9 +26,9 @@
     "eslint": "^9.39.2",
     "globals": "^16.5.0"
   }
+  "scripts": {
+    "dev": "http-server",
+    "lint": "eslint *.js"
+  }
 }
 
-"scripts": {
-  "dev": "http-server",
-  "lint": "eslint *.js"
-}
